@@ -64,7 +64,7 @@ QTransform matrix;
 //    }
 
     drawLines(scene);
-    ui->lineEdit->setText(QString::number(list2.size()));
+    ui->lineEdit->setText(QString::number(list2.size()/2));
 }
 
 MainWindow::~MainWindow()

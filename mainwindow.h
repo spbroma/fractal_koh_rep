@@ -19,6 +19,9 @@ public:
     void drawpoints(QList<QPointF> *list, double k);
 
     QList<QPointF> koh(QPointF pnt1, QPointF pnt2);
+    QList<QPointF> square(QPointF pnt1, QPointF pnt2);
+    QList<QPointF> freak(QPointF pnt1, QPointF pnt2);
+    QList<QPointF> tree(QPointF pnt1, QPointF pnt2);
 
     ~MainWindow();
     

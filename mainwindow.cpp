@@ -33,11 +33,62 @@ QTransform matrix;
     ui->graphicsView->setTransform(matrix);
 
     QList<QPointF> list;
+    //снежинка
+//    QPointF pt1, pt2, pt3, pt4;
+//    pt1.setX(-5);
+//    pt1.setY(0);
+
+//    pt2.setX(0);
+//    pt2.setY(sqrt(3)*10/2.0);
+
+//    pt3.setX(5);
+//    pt3.setY(0);
+
+//    pt4.setX(-5);
+//    pt4.setY(0);
+
+//    list.append(pt1);
+//    list.append(pt2);
+//    list.append(pt3);
+//    list.append(pt4);
+
+    //обратная снежинка
+//    QPointF pt1, pt2, pt3, pt4;
+//    pt1.setX(-5);
+//    pt1.setY(0);
+
+//    pt2.setX(0);
+//    pt2.setY(sqrt(3)*10/2.0);
+
+//    pt3.setX(5);
+//    pt3.setY(0);
+
+//    pt4.setX(-5);
+//    pt4.setY(0);
+
+//    list.append(pt4);
+//    list.append(pt3);
+//    list.append(pt2);
+//    list.append(pt1);
+
+    //кривая (2 точки)
+//    QPointF pt1, pt2;
+//    pt1.setX(-5);
+//    pt1.setY(0);
+
+//    pt2.setX(5);
+//    pt2.setY(0);
+
+//    list.append(pt1);
+//    list.append(pt2);
+
+    //кривая (3 точки)
     QPointF pt1, pt2;
     pt1.setX(-5);
-    pt1.setY(1);
+    pt1.setY(0);
+
     pt2.setX(5);
-    pt2.setY(1);
+    pt2.setY(0);
 
     list.append(pt1);
     list.append(pt2);
@@ -47,7 +98,9 @@ QTransform matrix;
         list2.clear();
         for(int j = 0; j<list.size()-1; j++)
         {
-            list2.append(koh(list.at(j), list.at(j+1)));
+            list2.append(freak(list.at(j), list.at(j+1)));
+//            list2.append(square(list.at(j), list.at(j+1)));
+//            list2.append(koh(list.at(j), list.at(j+1)));
         }
         list = list2;
     }
@@ -64,7 +117,7 @@ QTransform matrix;
 //    }
 
     drawLines(scene);
-    ui->lineEdit->setText(QString::number(list2.size()/2));
+    ui->lineEdit->setText(QString::number(list2.size()));
 }
 
 MainWindow::~MainWindow()
@@ -134,7 +187,7 @@ QList<QPointF> MainWindow::koh(QPointF pnt1, QPointF pnt2)
     QList<QPointF> fractalRot;
     double y;
 
-    for(int i = 0; i < 5; i++)
+    for(int i = 0; i < fractal.size(); i++)
     {
         xr = fractal.at(i).x() - fractal.at(0).x();
         yr = fractal.at(i).y() - fractal.at(0).y();
@@ -188,4 +241,226 @@ void MainWindow::scaleGraph()
 //    matrix.scale(k, -k);
 ////    ui->graphicsView->setTransform(matrix);
 ////    scene->update();
+}
+
+
+QList<QPointF> MainWindow::square(QPointF pnt1, QPointF pnt2)
+{
+    //парсим список
+    double x1, x2;
+    double y1, y2;
+
+//    x1 = list->at(0).x();
+//    y1 = list->at(0).y();
+
+//    x2 = list->at(1).x();
+//    y2 = list->at(1).y();
+
+    x1 = pnt1.x();
+    y1 = pnt1.y();
+
+    x2 = pnt2.x();
+    y2 = pnt2.y();
+
+    //определяем сдвиг и угол
+    double dx, dy, ang;
+
+    dx = x1;
+    dy = y1;
+    ang = -atan((y2 - y1)/(x2 - x1));
+
+    //крутим
+    double xr = x2 - x1;
+    double yr = y2 - y1;
+    double x = (xr*cos(ang) - yr*sin(ang))/2.0;
+
+    //считаем фрактал
+    dx += x;
+    QList<QPointF> fractal;
+    QPointF pnt;
+
+    pnt.setX(-x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    pnt.setX(-x/(2.0*sqrt(5)) + dx);
+    pnt.setY(x*sqrt(0.6)/2.0 +dy);
+    fractal.append(pnt);
+
+    pnt.setX(x/(2.0*sqrt(5)) + dx);
+    pnt.setY(-x*sqrt(0.6)/2.0  +dy);
+    fractal.append(pnt);
+
+    pnt.setX(x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    //вращаем его
+
+    QList<QPointF> fractalRot;
+    double y;
+
+    for(int i = 0; i < fractal.size(); i++)
+    {
+        xr = fractal.at(i).x() - fractal.at(0).x();
+        yr = fractal.at(i).y() - fractal.at(0).y();
+
+        x = xr*cos(-ang) - yr*sin(-ang) + fractal.at(0).x();
+        y = xr*sin(-ang) + yr*cos(-ang) + fractal.at(0).y();
+
+        pnt.setX(x);
+        pnt.setY(y);
+
+        fractalRot.append(pnt);
+    }
+
+    return fractalRot;
+
+}
+
+QList<QPointF> MainWindow::tree(QPointF pnt1, QPointF pnt2)
+{
+    //парсим список
+    double x1, x2;
+    double y1, y2;
+
+//    x1 = list->at(0).x();
+//    y1 = list->at(0).y();
+
+//    x2 = list->at(1).x();
+//    y2 = list->at(1).y();
+
+    x1 = pnt1.x();
+    y1 = pnt1.y();
+
+    x2 = pnt2.x();
+    y2 = pnt2.y();
+
+    //определяем сдвиг и угол
+    double dx, dy, ang;
+
+    dx = x1;
+    dy = y1;
+    ang = -atan((y2 - y1)/(x2 - x1));
+
+    //крутим
+    double xr = x2 - x1;
+    double yr = y2 - y1;
+    double x = (xr*cos(ang) - yr*sin(ang))/2.0;
+
+    //считаем фрактал
+    dx += x;
+    QList<QPointF> fractal;
+    QPointF pnt;
+
+    pnt.setX(-x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    pnt.setX(0 + dx);
+    pnt.setY(3*x/3.0 +dy);
+    fractal.append(pnt);
+
+//    pnt.setX(x/(2.0) + dx);
+//    pnt.setY(-x/2.0 +dy);
+//    fractal.append(pnt);
+
+    pnt.setX(x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    //вращаем его
+
+    QList<QPointF> fractalRot;
+    double y;
+
+    for(int i = 0; i < fractal.size(); i++)
+    {
+        xr = fractal.at(i).x() - fractal.at(0).x();
+        yr = fractal.at(i).y() - fractal.at(0).y();
+
+        x = xr*cos(-ang) - yr*sin(-ang) + fractal.at(0).x();
+        y = xr*sin(-ang) + yr*cos(-ang) + fractal.at(0).y();
+
+        pnt.setX(x);
+        pnt.setY(y);
+
+        fractalRot.append(pnt);
+    }
+
+    return fractalRot;
+
+}
+QList<QPointF> MainWindow::freak(QPointF pnt1, QPointF pnt2)
+{
+    //парсим список
+    double x1, x2;
+    double y1, y2;
+
+//    x1 = list->at(0).x();
+//    y1 = list->at(0).y();
+
+//    x2 = list->at(1).x();
+//    y2 = list->at(1).y();
+
+    x1 = pnt1.x();
+    y1 = pnt1.y();
+
+    x2 = pnt2.x();
+    y2 = pnt2.y();
+
+    //определяем сдвиг и угол
+    double dx, dy, ang;
+
+    dx = x1;
+    dy = y1;
+    ang = -atan((y2 - y1)/(x2 - x1));
+
+    //крутим
+    double xr = x2 - x1;
+    double yr = y2 - y1;
+    double x = (xr*cos(ang) - yr*sin(ang))/2.0;
+
+    //считаем фрактал
+    dx += x;
+    QList<QPointF> fractal;
+    QPointF pnt;
+
+    pnt.setX(-x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    pnt.setX(0 + dx);
+    pnt.setY(3*x/3.0 +dy);
+    fractal.append(pnt);
+
+//    pnt.setX(x/(2.0) + dx);
+//    pnt.setY(-x/2.0 +dy);
+//    fractal.append(pnt);
+
+    pnt.setX(x + dx);
+    pnt.setY(dy);
+    fractal.append(pnt);
+
+    //вращаем его
+
+    QList<QPointF> fractalRot;
+    double y;
+
+    for(int i = 0; i < fractal.size(); i++)
+    {
+        xr = fractal.at(i).x() - fractal.at(0).x();
+        yr = fractal.at(i).y() - fractal.at(0).y();
+
+        x = xr*cos(-ang) - yr*sin(-ang) + fractal.at(0).x();
+        y = xr*sin(-ang) + yr*cos(-ang) + fractal.at(0).y();
+
+        pnt.setX(x);
+        pnt.setY(y);
+
+        fractalRot.append(pnt);
+    }
+
+    return fractalRot;
+
 }

@@ -21,7 +21,8 @@ public:
     QList<QPointF> koh(QPointF pnt1, QPointF pnt2, bool end);
     QList<QPointF> square(QPointF pnt1, QPointF pnt2, bool end);
     QList<QPointF> freak(QPointF pnt1, QPointF pnt2, bool end);
-    QList<QPointF> tree(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> levi(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> cube(QPointF pnt1, QPointF pnt2, bool end);
 
     ~MainWindow();
     

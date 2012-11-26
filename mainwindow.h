@@ -18,10 +18,10 @@ public:
 
     void drawpoints(QList<QPointF> *list, double k);
 
-    QList<QPointF> koh(QPointF pnt1, QPointF pnt2);
-    QList<QPointF> square(QPointF pnt1, QPointF pnt2);
-    QList<QPointF> freak(QPointF pnt1, QPointF pnt2);
-    QList<QPointF> tree(QPointF pnt1, QPointF pnt2);
+    QList<QPointF> koh(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> square(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> freak(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> tree(QPointF pnt1, QPointF pnt2, bool end);
 
     ~MainWindow();
     
@@ -32,6 +32,8 @@ private slots:
         void func();
         void scaleGraph();
         void drawLines(QGraphicsScene *scene);
+        void on_internCheck_clicked(bool checked);
+        void on_externCheck_clicked(bool checked);
 };
 
 #endif // MAINWINDOW_H

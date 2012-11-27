@@ -23,6 +23,7 @@ public:
     QList<QPointF> freak(QPointF pnt1, QPointF pnt2, bool end);
     QList<QPointF> levi(QPointF pnt1, QPointF pnt2, bool end);
     QList<QPointF> cube(QPointF pnt1, QPointF pnt2, bool end);
+    QList<QPointF> dragon(QPointF pnt1, QPointF pnt2, bool end, bool reverse);
 
     ~MainWindow();
     
@@ -35,6 +36,7 @@ private slots:
         void drawLines(QGraphicsScene *scene);
         void on_internCheck_clicked(bool checked);
         void on_externCheck_clicked(bool checked);
+        void on_genBox_currentIndexChanged(int index);
 };
 
 #endif // MAINWINDOW_H

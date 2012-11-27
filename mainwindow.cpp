@@ -9,6 +9,8 @@ bool external;
 bool internal_0;
 bool external_0;
 
+double fractHeight;
+
 QList<QPointF> list2;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -35,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->genBox->addItem("прямоугольник");
         ui->genBox->addItem("леви");
         ui->genBox->addItem("квадрат");
+        ui->genBox->addItem("дракон");
 
 
     //    ui->externCheck->setChecked(true);
@@ -52,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         bool visible;
 
-        if(ui->genBox->currentIndex() == 2)
+        if(ui->genBox->currentIndex() == 2 || ui->genBox->currentIndex() == 4)
             visible = true;
         else
             visible = false;
@@ -306,6 +309,9 @@ MainWindow::MainWindow(QWidget *parent) :
                 case 3:
                     list2.append(cube(list.at(j), list.at(j+1), j == list.size()-2));
                     break;
+                case 4:
+                    list2.append(dragon(list.at(j), list.at(j+1), j == list.size()-2, j%2 == 0));
+                    break;
 
                 }
 
@@ -527,7 +533,8 @@ MainWindow::MainWindow(QWidget *parent) :
         //парсим список
         double x1, x2;
         double y1, y2;
-        double heigth = ui->heigthSpinBox->value();
+
+        fractHeight = ui->heigthSpinBox->value();
 
         x1 = pnt1.x();
         y1 = pnt1.y();
@@ -557,7 +564,7 @@ MainWindow::MainWindow(QWidget *parent) :
         fractal.append(pnt);
 
         pnt.setX(0 + dx);
-        pnt.setY(x*heigth +dy);
+        pnt.setY(x*fractHeight +dy);
         fractal.append(pnt);
 
     //    pnt.setX(x/(2.0) + dx);
@@ -772,6 +779,84 @@ MainWindow::MainWindow(QWidget *parent) :
 
     }
 
+    QList<QPointF> MainWindow::dragon(QPointF pnt1, QPointF pnt2, bool end, bool reverse)
+    {
+        //парсим список
+        double x1, x2;
+        double y1, y2;
+
+        fractHeight = ui->heigthSpinBox->value();
+
+    //    x1 = list->at(0).x();
+    //    y1 = list->at(0).y();
+
+    //    x2 = list->at(1).x();
+    //    y2 = list->at(1).y();
+
+        x1 = pnt1.x();
+        y1 = pnt1.y();
+
+        x2 = pnt2.x();
+        y2 = pnt2.y();
+
+        //определяем сдвиг и угол
+        double dx, dy, ang;
+
+        dx = x1;
+        dy = y1;
+        ang = -atan((y2 - y1)/(x2 - x1));
+
+        //крутим
+        double xr = x2 - x1;
+        double yr = y2 - y1;
+        double x = (xr*cos(ang) - yr*sin(ang))/2.0;
+
+        //считаем фрактал
+        dx += x;
+        QList<QPointF> fractal;
+        QPointF pnt;
+
+        pnt.setX(-x + dx);
+        pnt.setY(dy);
+        fractal.append(pnt);
+
+        pnt.setX(0 + dx);
+        if(reverse)
+            pnt.setY(x*fractHeight +dy);
+        else
+            pnt.setY(-x*fractHeight +dy);
+        fractal.append(pnt);
+
+        if(end)
+        {
+            pnt.setX(x + dx);
+            pnt.setY(dy);
+            fractal.append(pnt);
+        }
+
+        //вращаем его
+
+        QList<QPointF> fractalRot;
+        double y;
+
+        for(int i = 0; i < fractal.size(); i++)
+        {
+            xr = fractal.at(i).x() - fractal.at(0).x();
+            yr = fractal.at(i).y() - fractal.at(0).y();
+
+            x = xr*cos(-ang) - yr*sin(-ang) + fractal.at(0).x();
+            y = xr*sin(-ang) + yr*cos(-ang) + fractal.at(0).y();
+
+            pnt.setX(x);
+            pnt.setY(y);
+
+            fractalRot.append(pnt);
+        }
+
+        return fractalRot;
+
+    }
+
 
     void MainWindow::on_internCheck_clicked(bool checked)
     {
@@ -785,3 +870,19 @@ MainWindow::MainWindow(QWidget *parent) :
         func();
     }
 
+
+void MainWindow::on_genBox_currentIndexChanged(int index)
+{
+    switch(index)
+    {
+    case 2:
+        fractHeight = 1/sqrt(2);
+        break;
+
+    case 4:
+        fractHeight = 1;
+        break;
+    }
+
+    ui->heigthSpinBox->setValue(fractHeight);
+}
